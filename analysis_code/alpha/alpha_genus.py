@@ -648,7 +648,7 @@ fig.suptitle(
     "Alpha Diversity \u2014 Genus Level (Shannon H\u2019) Per Dataset",
     fontsize=14,
     fontweight="bold",
-    y=1.01,
+    y=1.00,
 )
 
 plt.savefig(
