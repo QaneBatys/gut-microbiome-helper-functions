@@ -620,8 +620,7 @@ fig.legend(
 )
 
 fig.suptitle(
-    "Alpha Diversity \u2014 Species Level (Shannon H\u2019) Per Dataset"
-    "  [Train Set \u2014 80% per dataset]",
+    "Alpha Diversity \u2014 Species Level (Shannon H\u2019) Per Dataset",
     fontsize=14,
     fontweight="bold",
     y=1.01,

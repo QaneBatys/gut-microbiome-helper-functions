@@ -470,7 +470,7 @@ for i, cond in enumerate(condition_order):
 ax.set_ylabel("Shannon Index H' (bits)", fontsize=12, fontweight="bold", labelpad=10)
 ax.set_xlabel("")
 ax.set_title(
-    "Alpha Diversity - Species Level\nTrain Set (80% per dataset)",
+    "Alpha Diversity - Species Level",
     fontsize=13,
     fontweight="bold",
     pad=14,
