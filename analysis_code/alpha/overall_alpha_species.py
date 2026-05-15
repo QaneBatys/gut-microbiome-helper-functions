@@ -20,6 +20,7 @@ Cliff's delta sign convention:
 Shannon H' is computed in BITS (log base 2) (consistent with QIIME2 and phyloseq defaults).
 """
 
+import os
 import warnings
 import numpy as np
 import pandas as pd
@@ -27,16 +28,12 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from matplotlib.patches import Patch
 from scipy.stats import mannwhitneyu
-from pd_utils import (
-    relative_abundance,
-    prepare_target_class,
-    split_dataset,
-)
+from pd_utils import relative_abundance
 
 warnings.filterwarnings("ignore")
 
 # CONFIGURATION
-FILE_PATH = "./data/filtered_nine_crc_final_clean.tsv"
+PREPARED_DIR = "./data/prepared/species/"
 MIN_SAMPLES = 10
 BOOTSTRAP_ITERS = 5000
 RANDOM_SEED = 42
@@ -46,32 +43,17 @@ OUTPUT_DESC = "alpha_diversity_combined_descriptive_train.csv"
 
 MEM_GUARD_ELEMENTS = 5_000_000
 
-CONDITION_MAP = {
-    "control": "control",
-    "Control": "control",
-    "CONTROL": "control",
-    "adenoma": None,
-    "Adenoma": None,
-    "ADENOMA": None,
-    "crc": "CRC",
-    "Crc": "CRC",
-    "CRC": "CRC",
-    "IBD": None,
-    "ibd": None,
-}
-
 METADATA_COLS = [
     "dataset_name",
-    "study_condition",
     "sampleID",
-    "body_site",
+    "subjectID",
+    "study_condition",
     "disease",
     "age",
     "gender",
-    "BMI",
     "country",
+    "BMI",
     "fobt",
-    "sequencing_instrument",
 ]
 
 
@@ -176,53 +158,54 @@ def boxplot_stats(values):
 
 
 # 1. LOAD DATA
-print("Loading data...")
-df = pd.read_csv(FILE_PATH, sep="\t", index_col=0)
-
-metadata = df[["dataset_name", "study_condition", "sampleID"]].copy()
-metadata["study_condition"] = metadata["study_condition"].str.strip().map(CONDITION_MAP)
-
-unmapped = metadata["study_condition"].isna()
-if unmapped.sum() > 0:
-    raw_vals = df.loc[unmapped, "study_condition"].unique()
-    print(
-        f"  Excluding {unmapped.sum()} sample(s) with unmapped/excluded "
-        f"condition(s): {list(raw_vals)}"
-    )
-    metadata = metadata[~unmapped].copy()
-
-# Write mapped condition back before splitting
-df = df.loc[metadata.index].copy()
-df["study_condition"] = metadata["study_condition"]
-
-print("\nSplitting data (stratified 80/20 per dataset)...")
-# Adding 'crc_label' column
-df_labeled = prepare_target_class( 
-    df, "study_condition", "CRC", "crc_label"
+print("Loading prepared data...")
+X_train_df     = pd.read_csv(os.path.join(PREPARED_DIR, "X_train_full.csv"))
+y_train        = pd.read_csv(os.path.join(PREPARED_DIR, "y_train_full.csv")).squeeze()
+surviving_taxa = (
+    pd.read_csv(os.path.join(PREPARED_DIR, "all_taxa_full.csv"), header=None)
+    .squeeze()
+    .tolist()
 )
 
-splits = split_dataset(df_labeled, "crc_label", strategy="individual")
+print(f"  X_train : {X_train_df.shape}")
+print(f"  y_train : {len(y_train)}  "
+      f"(CRC: {int(y_train.sum())}, Control: {int((y_train == 0).sum())})")
+print(f"  Taxa    : {len(surviving_taxa)} species")
 
-# Per-dataset split summary
-print(f"\n  {'Dataset':<35} {'Total':>6} {'Train':>6} {'Test':>5}")
-print(f"  {'-'*55}")
-for ds, (X_tr, X_te, y_tr, y_te) in splits.items():
-    total = len(X_tr) + len(X_te)
-    print(f"  {ds:<35} {total:>6} {len(X_tr):>6} {len(X_te):>5}")
+# Reconstruct metadata + species matrix
+meta_cols_present = [c for c in METADATA_COLS if c in X_train_df.columns]
+species_cols      = [c for c in X_train_df.columns if c not in METADATA_COLS]
 
-train_df = pd.concat(
-    [X_tr for X_tr, _, _, _ in splits.values()],
-    ignore_index=True,
+# If the prepared file still carries metadata columns, pull them; otherwise
+# rebuild study_condition from the binary label vector.
+if "study_condition" in X_train_df.columns:
+    metadata = X_train_df[meta_cols_present].copy().reset_index(drop=True)
+else:
+    metadata = pd.DataFrame(index=X_train_df.index)
+    if "dataset_name" in X_train_df.columns:
+        metadata["dataset_name"] = X_train_df["dataset_name"].values
+    if "sampleID" in X_train_df.columns:
+        metadata["sampleID"] = X_train_df["sampleID"].values
+    # Map binary label → condition string expected by downstream code
+    metadata["study_condition"] = y_train.map({1: "CRC", 0: "control"}).values
+
+metadata = metadata.reset_index(drop=True)
+
+# Use only the surviving taxa so the feature set matches the ML pipeline
+available_taxa = [c for c in surviving_taxa if c in X_train_df.columns]
+species_df = (
+    X_train_df[available_taxa]
+    .apply(pd.to_numeric, errors="coerce")
+    .fillna(0)
+    .reset_index(drop=True)
 )
+species_cols = available_taxa   # update reference used later
+
 print(
-    f"\n  Pooled train: {len(train_df)} samples  "
-    f"(control={(train_df['study_condition']=='control').sum()}, "
-    f"CRC={(train_df['study_condition']=='CRC').sum()})"
+    f"\n  Pooled train: {len(metadata)} samples  "
+    f"(control={(metadata['study_condition'] == 'control').sum()}, "
+    f"CRC={(metadata['study_condition'] == 'CRC').sum()})"
 )
-
-metadata = train_df[["dataset_name", "study_condition", "sampleID"]].copy()
-species_cols = [c for c in train_df.columns if c not in METADATA_COLS]
-species_df = train_df[species_cols].apply(pd.to_numeric, errors="coerce").fillna(0)
 
 
 # 2. ZERO-SUM GUARD

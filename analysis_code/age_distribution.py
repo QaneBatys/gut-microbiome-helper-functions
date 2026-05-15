@@ -1,14 +1,46 @@
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import warnings
 
+warnings.filterwarnings("ignore")
+
+# CONFIGURATION
+PREPARED_DIR = "./data/prepared/species/"
+
+METADATA_COLS = [
+    "dataset_name",
+    "sampleID",
+    "subjectID",
+    "study_condition",
+    "disease",
+    "age",
+    "gender",
+    "country",
+    "BMI",
+    "fobt",
+]
+
 # 1. LOADING AND TRANSPOSING
-df = pd.read_csv(
-    "./data/filtered_nine_crc_final.tsv", sep="\t", header=None, index_col=0
-)
-df_t = df.T
-df_t.columns = df_t.columns.astype(str).str.strip()
+X_train_df = pd.read_csv(os.path.join(PREPARED_DIR, "X_train.csv"))
+y_train    = pd.read_csv(os.path.join(PREPARED_DIR, "y_train.csv")).squeeze()
+
+# Reconstruct metadata from prepared file
+meta_cols_present = [c for c in METADATA_COLS if c in X_train_df.columns]
+
+if "study_condition" in X_train_df.columns:
+    df_t = X_train_df[meta_cols_present].copy().reset_index(drop=True)
+else:
+    df_t = pd.DataFrame(index=X_train_df.index)
+    if "dataset_name" in X_train_df.columns:
+        df_t["dataset_name"] = X_train_df["dataset_name"].values
+    if "sampleID" in X_train_df.columns:
+        df_t["sampleID"] = X_train_df["sampleID"].values
+    # Map binary label → condition string expected by downstream code
+    df_t["study_condition"] = y_train.map({1: "CRC", 0: "control"}).values
+
+df_t = df_t.reset_index(drop=True)
 
 # 2. CONDITION AND AGE
 target_conditions = ["control", "adenoma", "CRC"]
