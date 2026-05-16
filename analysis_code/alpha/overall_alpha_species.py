@@ -220,15 +220,8 @@ if zero_sum_mask.sum() > 0:
 
 
 # 3. TSS CHECK + RELATIVE ABUNDANCE
-bad_sum_mask = ~np.isclose(row_sums, 100.0, atol=0.1)
-if bad_sum_mask.sum() > 0:
-    print(f"  Excluding {bad_sum_mask.sum()} sample(s) with out-of-range row sums.")
-    keep = ~bad_sum_mask
-    metadata = metadata[keep.values].reset_index(drop=True)
-    species_df = species_df[keep.values].reset_index(drop=True)
-    row_sums = row_sums[keep.values].reset_index(drop=True)
-else:
-    print(f"  TSS check passed: all {len(row_sums)} samples sum to 100 ± 0.1.")
+print(f"  Row sum range: {row_sums.min():.4f} – {row_sums.max():.4f}  ({len(row_sums)} samples retained)")
+
 
 species_norm = relative_abundance(species_df) 
 species_proportions = species_norm[species_cols]

@@ -1,0 +1,52 @@
+🚀 Running RF GridSearch...
+Loading prepared data...
+  X_train_df : (659, 87)
+  X_test_df  : (167, 87)
+  y_train    : 659  (CRC: 332, Control: 327)
+  y_test     : 167   (CRC: 82, Control: 85)
+  Taxa       : 87 species
+
+🔍 Tuning hyperparameters (LODO)...
+
+  Model saved to: ./results/lgbm_species_lodo/best_model.pkl
+
+=======================================================
+  FINAL RESULTS — OVERALL
+=======================================================
+  Val  AUROC : 0.7382  ±0.0899
+  Test AUROC : 0.7415
+  Test Acc   : 0.6946
+
+======================================================================
+  TEST RESULTS — PER DATASET
+======================================================================
+  Dataset                            n    Control     CRC     AUROC    Accuracy
+  ───────────────────────────────────────────────────────────────────
+  FengQ_2015                        22         13       9    0.8547      0.7727
+  HanniganGD_2017                   11          6       5    0.2333      0.4545
+  ThomasAM_2019_a                   11          5       6    0.8667      0.8182
+  ThomasAM_2019_b                   12          6       6    0.8056      0.5833
+  ThomasAM_2019_c                   16          8       8    0.3906      0.3750
+  VogtmannE_2016                    21         11      10    0.7545      0.7619
+  WirbelJ_2018                      25         13      12    0.8462      0.7600
+  YuJ_2015                          26         11      15    0.7333      0.6538
+  ZellerG_2014                      23         12      11    0.8561      0.8696
+  ───────────────────────────────────────────────────────────────────
+  OVERALL                          167         85      82    0.7415      0.6946
+
+📊 Generating plots...
+
+============================================================
+  OUTPUT FILES
+============================================================
+  ✅  best_model.pkl                         trained LightGBM model (joblib)
+  ✅  tuning_all_combinations.csv            all hyperparameter combinations + AUROC
+  ✅  tuning_best_params.csv                 best hyperparameters + best AUROC
+  ✅  validation_metrics.csv                 validation set metrics (LODO per-dataset)
+  ✅  test_metrics.csv                       per-dataset + overall test metrics
+  ✅  roc_curve.png                          ROC curve with 95% CI
+  ✅  pr_curve.png                           Precision-Recall curve
+  ✅  confusion_matrix.png                   confusion matrix on test set
+
+✅ Pipeline complete. All outputs saved to: ./results/lgbm_species_lodo/
+✅ RF job completed with adenoma and 10 per.

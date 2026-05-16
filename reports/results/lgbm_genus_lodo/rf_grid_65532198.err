@@ -1,0 +1,46 @@
+INFO | pd_ml |   tune_hyperparameters: search_ratio=0.9 → n_iter=33177 / 36864 (90.0% of grid)
+INFO | pd_ml |   Best AUROC : 0.7913
+  Best params: {'path_smooth': 0, 'num_leaves': 15, 'n_estimators': 1000, 'min_child_samples': 5, 'learning_rate': 0.01, 'lambda_l2': 0, 'lambda_l1': 0.1, 'feature_fraction': 0.6, 'extra_trees': False, 'bagging_fraction': 0.7}
+INFO | pd_ml |   Tuning results written to: ./results/lgbm_genus_lodo/tuning_all_combinations.csv
+INFO | pd_ml |   Best params written to: ./results/lgbm_genus_lodo/tuning_best_params.csv
+INFO | pd_ml | 
+  === tune_hyperparameters (lodo) ===
+  Search method  : RandomizedSearchCV
+  Total combos   : 36864
+  Sampled        : 33177 (90.0%)
+  Rank   Mean AUROC       Std  Params
+  ----------------------------------------------------------------------
+  1          0.7913    0.0751  {'path_smooth': 0, 'num_leaves': 15, 'n_estimators': 1000, 'min_child_samples': 5, 'learning_rate': 0.01, 'lambda_l2': 0, 'lambda_l1': 0.1, 'feature_fraction': 0.6, 'extra_trees': False, 'bagging_fraction': 0.9}
+  2          0.7913    0.0751  {'path_smooth': 0, 'num_leaves': 15, 'n_estimators': 1000, 'min_child_samples': 5, 'learning_rate': 0.01, 'lambda_l2': 0, 'lambda_l1': 0.1, 'feature_fraction': 0.6, 'extra_trees': False, 'bagging_fraction': 0.7}
+  3          0.7911    0.0695  {'path_smooth': 0, 'num_leaves': 15, 'n_estimators': 2000, 'min_child_samples': 5, 'learning_rate': 0.01, 'lambda_l2': 0, 'lambda_l1': 0.1, 'feature_fraction': 0.6, 'extra_trees': False, 'bagging_fraction': 0.9}
+  4          0.7911    0.0695  {'path_smooth': 0, 'num_leaves': 15, 'n_estimators': 2000, 'min_child_samples': 5, 'learning_rate': 0.01, 'lambda_l2': 0, 'lambda_l1': 0.1, 'feature_fraction': 0.6, 'extra_trees': False, 'bagging_fraction': 0.7}
+  5          0.7907    0.0741  {'path_smooth': 1, 'num_leaves': 15, 'n_estimators': 2000, 'min_child_samples': 5, 'learning_rate': 0.01, 'lambda_l2': 0, 'lambda_l1': 0.1, 'feature_fraction': 0.6, 'extra_trees': False, 'bagging_fraction': 0.7}
+
+INFO | pd_ml | 
+  Strategy : lodo
+  Metric                     Mean       Std
+  ------------------------------------------
+  accuracy                 0.7035    0.0629
+  balanced_accuracy        0.7017    0.0621
+  mcc                      0.4091    0.1213
+  auroc                    0.7913    0.0751
+  auprc                    0.8154    0.0607
+  precision                0.7125    0.0680
+  recall                   0.6857    0.1491
+  specificity              0.7176    0.0910
+  f1                       0.6911    0.1051
+
+  Per-fold AUROC:
+    FengQ_2015: 0.8063
+    HanniganGD_2017: 0.5888
+    ThomasAM_2019_a: 0.8146
+    ThomasAM_2019_b: 0.8042
+    ThomasAM_2019_c: 0.8037
+    VogtmannE_2016: 0.7967
+    WirbelJ_2018: 0.8462
+    YuJ_2015: 0.8663
+    ZellerG_2014: 0.7949
+
+INFO | pd_ml |   Validation metrics written to: ./results/lgbm_genus_lodo/validation_metrics.csv
+INFO | pd_ml |   Test metrics written to: ./results/lgbm_genus_lodo/test_metrics.csv
+INFO | pd_assess |   Confusion matrix saved to: ./results/lgbm_genus_lodo/confusion_matrix.png

@@ -1,0 +1,2 @@
+strategy,split,accuracy,balanced_accuracy,mcc,auroc,auprc,precision,recall,specificity,f1,accuracy_std,balanced_accuracy_std,mcc_std,auroc_std,auprc_std,precision_std,recall_std,specificity_std,f1_std
+train-test,overall,0.7348484848484849,0.7360505166475315,0.47756030512558056,0.8049368541905855,0.8191619019544222,0.7857142857142857,0.6567164179104478,0.8153846153846154,0.7154471544715447,,,,,,,,,

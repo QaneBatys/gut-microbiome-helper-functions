@@ -1,0 +1,42 @@
+INFO | pd_ml |   tune_hyperparameters: search_ratio=0.9 → n_iter=33177 / 36864 (90.0% of grid)
+INFO | pd_ml |   Best AUROC : 0.8178
+  Best params: {'path_smooth': 1, 'num_leaves': 7, 'n_estimators': 1000, 'min_child_samples': 5, 'learning_rate': 0.01, 'lambda_l2': 0.1, 'lambda_l1': 0.1, 'feature_fraction': 0.4, 'extra_trees': True, 'bagging_fraction': 0.7}
+INFO | pd_ml |   Tuning results written to: ./results/lgbm_genus_kfold/tuning_all_combinations.csv
+INFO | pd_ml |   Best params written to: ./results/lgbm_genus_kfold/tuning_best_params.csv
+INFO | pd_ml | 
+  === tune_hyperparameters (k-fold) ===
+  Search method  : RandomizedSearchCV
+  Total combos   : 36864
+  Sampled        : 33177 (90.0%)
+  Rank   Mean AUROC       Std  Params
+  ----------------------------------------------------------------------
+  1          0.8178    0.0181  {'path_smooth': 1, 'num_leaves': 7, 'n_estimators': 1000, 'min_child_samples': 5, 'learning_rate': 0.01, 'lambda_l2': 0.1, 'lambda_l1': 0.1, 'feature_fraction': 0.4, 'extra_trees': True, 'bagging_fraction': 0.7}
+  2          0.8178    0.0181  {'path_smooth': 1, 'num_leaves': 7, 'n_estimators': 1000, 'min_child_samples': 5, 'learning_rate': 0.01, 'lambda_l2': 0.1, 'lambda_l1': 0.1, 'feature_fraction': 0.4, 'extra_trees': True, 'bagging_fraction': 0.9}
+  3          0.8159    0.0180  {'path_smooth': 0, 'num_leaves': 31, 'n_estimators': 1000, 'min_child_samples': 5, 'learning_rate': 0.01, 'lambda_l2': 0.1, 'lambda_l1': 0.1, 'feature_fraction': 0.6, 'extra_trees': True, 'bagging_fraction': 0.9}
+  4          0.8159    0.0180  {'path_smooth': 0, 'num_leaves': 31, 'n_estimators': 1000, 'min_child_samples': 5, 'learning_rate': 0.01, 'lambda_l2': 0.1, 'lambda_l1': 0.1, 'feature_fraction': 0.6, 'extra_trees': True, 'bagging_fraction': 0.7}
+  5          0.8158    0.0197  {'path_smooth': 0, 'num_leaves': 31, 'n_estimators': 1000, 'min_child_samples': 10, 'learning_rate': 0.01, 'lambda_l2': 0, 'lambda_l1': 0.1, 'feature_fraction': 0.4, 'extra_trees': True, 'bagging_fraction': 0.7}
+
+INFO | pd_ml | 
+  Strategy : k-fold
+  Metric                     Mean       Std
+  ------------------------------------------
+  accuracy                 0.7450    0.0285
+  balanced_accuracy        0.7441    0.0252
+  mcc                      0.4908    0.0538
+  auroc                    0.8178    0.0181
+  auprc                    0.8352    0.0110
+  precision                0.7744    0.0189
+  recall                   0.6991    0.0238
+  specificity              0.7891    0.0440
+  f1                       0.7346    0.0171
+
+  Per-fold AUROC:
+    fold_1: 0.8382
+    fold_2: 0.8333
+    fold_3: 0.7924
+    fold_4: 0.8007
+    fold_5: 0.8242
+
+INFO | pd_ml |   Validation metrics written to: ./results/lgbm_genus_kfold/validation_metrics.csv
+INFO | pd_ml |   Test metrics written to: ./results/lgbm_genus_kfold/test_metrics.csv
+INFO | pd_assess |   Confusion matrix saved to: ./results/lgbm_genus_kfold/confusion_matrix.png

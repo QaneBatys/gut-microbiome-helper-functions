@@ -1,0 +1,52 @@
+🚀 Running RF GridSearch...
+Loading prepared data...
+  X_train_df : (659, 87)
+  X_test_df  : (167, 87)
+  y_train    : 659  (CRC: 332, Control: 327)
+  y_test     : 167   (CRC: 82, Control: 85)
+  Taxa       : 87 species
+
+🔍 Tuning hyperparameters (5-Fold CV)...
+
+  Model saved to: ./results/rf_species_kfold/best_model.pkl
+
+=======================================================
+  FINAL RESULTS — OVERALL
+=======================================================
+  Val  AUROC : 0.7561  ±0.0375
+  Test AUROC : 0.7496
+  Test Acc   : 0.6826
+
+======================================================================
+  TEST RESULTS — PER DATASET
+======================================================================
+  Dataset                            n    Control     CRC     AUROC    Accuracy
+  ───────────────────────────────────────────────────────────────────
+  FengQ_2015                        22         13       9    0.8462      0.7727
+  HanniganGD_2017                   11          6       5    0.3667      0.3636
+  ThomasAM_2019_a                   11          5       6    0.8667      0.7273
+  ThomasAM_2019_b                   12          6       6    0.6667      0.7500
+  ThomasAM_2019_c                   16          8       8    0.4844      0.3750
+  VogtmannE_2016                    21         11      10    0.8000      0.7143
+  WirbelJ_2018                      25         13      12    0.8910      0.8000
+  YuJ_2015                          26         11      15    0.7333      0.6154
+  ZellerG_2014                      23         12      11    0.8409      0.8261
+  ───────────────────────────────────────────────────────────────────
+  OVERALL                          167         85      82    0.7496      0.6826
+
+📊 Generating plots...
+
+============================================================
+  OUTPUT FILES
+============================================================
+  ✅  best_model.pkl                         trained Random Forest model (joblib)
+  ✅  tuning_all_combinations.csv            all hyperparameter combinations + AUROC
+  ✅  tuning_best_params.csv                 best hyperparameters + best AUROC
+  ✅  validation_metrics.csv                 validation set metrics (5-fold)
+  ✅  test_metrics.csv                       per-dataset + overall test metrics
+  ✅  roc_curve.png                          ROC curve with 95% CI
+  ✅  pr_curve.png                           Precision-Recall curve
+  ✅  confusion_matrix.png                   confusion matrix on test set
+
+✅ Pipeline complete. All outputs saved to: ./results/rf_species_kfold/
+✅ RF job completed with adenoma and 10 per.

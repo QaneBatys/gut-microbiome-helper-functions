@@ -1,0 +1,2 @@
+comparison,n_control,n_comparison,p_value,significance,cliffs_delta,ci_lower,ci_upper,effect_label
+control vs CRC,327,332,0.048108,*,-0.089,-0.1762,-0.0025,negligible

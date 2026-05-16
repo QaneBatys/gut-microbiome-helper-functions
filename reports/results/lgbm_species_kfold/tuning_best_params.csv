@@ -1,0 +1,2 @@
+best_auroc,strategy,search_method,n_iter,n_combinations,search_ratio,param_path_smooth,param_num_leaves,param_n_estimators,param_min_child_samples,param_learning_rate,param_lambda_l2,param_lambda_l1,param_feature_fraction,param_extra_trees,param_bagging_fraction
+0.7588928134266385,k-fold,RandomizedSearchCV,33177,36864,0.9,1,7,500,5,0.01,0,0,0.4,True,0.7

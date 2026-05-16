@@ -1,0 +1,35 @@
+INFO | pd_ml |   tune_hyperparameters: search_ratio=0.9 → n_iter=38707 / 43008 (90.0% of grid)
+INFO | pd_ml |   Best AUROC : 0.8236
+  Best params: {'n_estimators': 1000, 'min_samples_split': 2, 'min_samples_leaf': 1, 'max_samples': None, 'max_features': 0.2, 'max_depth': None, 'criterion': 'entropy', 'class_weight': 'balanced_subsample', 'ccp_alpha': 0.0001}
+INFO | pd_ml |   Tuning results written to: ./results/rf_genus_train_val/tuning_all_combinations.csv
+INFO | pd_ml |   Best params written to: ./results/rf_genus_train_val/tuning_best_params.csv
+INFO | pd_ml | 
+  === tune_hyperparameters (train-test) ===
+  Search method  : RandomizedSearchCV
+  Total combos   : 43008
+  Sampled        : 38707 (90.0%)
+  Rank   Mean AUROC       Std  Params
+  ----------------------------------------------------------------------
+  1          0.8236    0.0000  {'n_estimators': 1000, 'min_samples_split': 2, 'min_samples_leaf': 1, 'max_samples': None, 'max_features': 0.2, 'max_depth': None, 'criterion': 'entropy', 'class_weight': 'balanced_subsample', 'ccp_alpha': 0.0}
+  2          0.8236    0.0000  {'n_estimators': 1000, 'min_samples_split': 2, 'min_samples_leaf': 1, 'max_samples': None, 'max_features': 0.2, 'max_depth': None, 'criterion': 'entropy', 'class_weight': 'balanced_subsample', 'ccp_alpha': 0.0001}
+  3          0.8235    0.0000  {'n_estimators': 2000, 'min_samples_split': 2, 'min_samples_leaf': 1, 'max_samples': None, 'max_features': 0.2, 'max_depth': None, 'criterion': 'entropy', 'class_weight': 'balanced_subsample', 'ccp_alpha': 0.001}
+  4          0.8235    0.0000  {'n_estimators': 2000, 'min_samples_split': 2, 'min_samples_leaf': 1, 'max_samples': None, 'max_features': 0.2, 'max_depth': None, 'criterion': 'entropy', 'class_weight': 'balanced_subsample', 'ccp_alpha': 0.0001}
+  5          0.8235    0.0000  {'n_estimators': 2000, 'min_samples_split': 2, 'min_samples_leaf': 1, 'max_samples': None, 'max_features': 0.2, 'max_depth': None, 'criterion': 'entropy', 'class_weight': 'balanced_subsample', 'ccp_alpha': 0.0}
+
+INFO | pd_ml | 
+  Strategy : train-test
+  Metric                     Mean       Std
+  ------------------------------------------
+  accuracy                 0.7348          
+  balanced_accuracy        0.7361          
+  mcc                      0.4776          
+  auroc                    0.8049          
+  auprc                    0.8192          
+  precision                0.7857          
+  recall                   0.6567          
+  specificity              0.8154          
+  f1                       0.7154          
+
+INFO | pd_ml |   Validation metrics written to: ./results/rf_genus_train_val/validation_metrics.csv
+INFO | pd_ml |   Test metrics written to: ./results/rf_genus_train_val/test_metrics.csv
+INFO | pd_assess |   Confusion matrix saved to: ./results/rf_genus_train_val/confusion_matrix.png

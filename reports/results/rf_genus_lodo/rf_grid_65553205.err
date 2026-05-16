@@ -1,0 +1,46 @@
+INFO | pd_ml |   tune_hyperparameters: search_ratio=0.9 → n_iter=19353 / 21504 (90.0% of grid)
+INFO | pd_ml |   Best AUROC : 0.7927
+  Best params: {'n_estimators': 500, 'min_samples_split': 2, 'min_samples_leaf': 2, 'max_samples': None, 'max_features': 0.2, 'max_depth': 10, 'criterion': 'gini', 'class_weight': 'balanced', 'ccp_alpha': 0.0001}
+INFO | pd_ml |   Tuning results appended to: ./results/rf_genus_lodo/tuning_all_combinations.csv
+INFO | pd_ml |   Best params written to: ./results/rf_genus_lodo/tuning_best_params.csv
+INFO | pd_ml | 
+  === tune_hyperparameters (lodo) ===
+  Search method  : RandomizedSearchCV
+  Total combos   : 21504
+  Sampled        : 19353 (90.0%)
+  Rank   Mean AUROC       Std  Params
+  ----------------------------------------------------------------------
+  1          0.7927    0.0728  {'n_estimators': 500, 'min_samples_split': 2, 'min_samples_leaf': 2, 'max_samples': None, 'max_features': 0.2, 'max_depth': 10, 'criterion': 'gini', 'class_weight': 'balanced', 'ccp_alpha': 0.0001}
+  2          0.7927    0.0728  {'n_estimators': 500, 'min_samples_split': 2, 'min_samples_leaf': 2, 'max_samples': None, 'max_features': 0.2, 'max_depth': 10, 'criterion': 'gini', 'class_weight': 'balanced', 'ccp_alpha': 0.0}
+  3          0.7922    0.0841  {'n_estimators': 500, 'min_samples_split': 2, 'min_samples_leaf': 2, 'max_samples': None, 'max_features': 0.2, 'max_depth': 10, 'criterion': 'entropy', 'class_weight': 'balanced', 'ccp_alpha': 0.001}
+  4          0.7922    0.0841  {'n_estimators': 500, 'min_samples_split': 2, 'min_samples_leaf': 2, 'max_samples': None, 'max_features': 0.2, 'max_depth': 10, 'criterion': 'entropy', 'class_weight': 'balanced', 'ccp_alpha': 0.0001}
+  5          0.7922    0.0806  {'n_estimators': 500, 'min_samples_split': 5, 'min_samples_leaf': 1, 'max_samples': 0.9, 'max_features': 'log2', 'max_depth': None, 'criterion': 'entropy', 'class_weight': 'balanced_subsample', 'ccp_alpha': 0.0}
+
+INFO | pd_ml | 
+  Strategy : lodo
+  Metric                     Mean       Std
+  ------------------------------------------
+  accuracy                 0.7110    0.0672
+  balanced_accuracy        0.7100    0.0669
+  mcc                      0.4277    0.1239
+  auroc                    0.7927    0.0728
+  auprc                    0.8110    0.0632
+  precision                0.7292    0.0751
+  recall                   0.6861    0.1603
+  specificity              0.7338    0.1234
+  f1                       0.6941    0.1166
+
+  Per-fold AUROC:
+    FengQ_2015: 0.8300
+    HanniganGD_2017: 0.5992
+    ThomasAM_2019_a: 0.8330
+    ThomasAM_2019_b: 0.8077
+    ThomasAM_2019_c: 0.7812
+    VogtmannE_2016: 0.7898
+    WirbelJ_2018: 0.8361
+    YuJ_2015: 0.8631
+    ZellerG_2014: 0.7945
+
+INFO | pd_ml |   Validation metrics written to: ./results/rf_genus_lodo/validation_metrics.csv
+INFO | pd_ml |   Test metrics written to: ./results/rf_genus_lodo/test_metrics.csv
+INFO | pd_assess |   Confusion matrix saved to: ./results/rf_genus_lodo/confusion_matrix.png

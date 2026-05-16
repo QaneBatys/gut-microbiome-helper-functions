@@ -1,0 +1,42 @@
+INFO | pd_ml |   tune_hyperparameters: search_ratio=0.9 → n_iter=38707 / 43008 (90.0% of grid)
+INFO | pd_ml |   Best AUROC : 0.7561
+  Best params: {'n_estimators': 500, 'min_samples_split': 5, 'min_samples_leaf': 1, 'max_samples': None, 'max_features': 0.2, 'max_depth': None, 'criterion': 'gini', 'class_weight': 'balanced', 'ccp_alpha': 0.001}
+INFO | pd_ml |   Tuning results written to: ./results/rf_species_kfold/tuning_all_combinations.csv
+INFO | pd_ml |   Best params written to: ./results/rf_species_kfold/tuning_best_params.csv
+INFO | pd_ml | 
+  === tune_hyperparameters (k-fold) ===
+  Search method  : RandomizedSearchCV
+  Total combos   : 43008
+  Sampled        : 38707 (90.0%)
+  Rank   Mean AUROC       Std  Params
+  ----------------------------------------------------------------------
+  1          0.7561    0.0375  {'n_estimators': 500, 'min_samples_split': 5, 'min_samples_leaf': 1, 'max_samples': None, 'max_features': 0.2, 'max_depth': None, 'criterion': 'gini', 'class_weight': 'balanced', 'ccp_alpha': 0.001}
+  2          0.7561    0.0375  {'n_estimators': 500, 'min_samples_split': 5, 'min_samples_leaf': 1, 'max_samples': None, 'max_features': 0.2, 'max_depth': 20, 'criterion': 'gini', 'class_weight': 'balanced', 'ccp_alpha': 0.001}
+  3          0.7560    0.0371  {'n_estimators': 500, 'min_samples_split': 10, 'min_samples_leaf': 8, 'max_samples': None, 'max_features': 0.2, 'max_depth': 10, 'criterion': 'entropy', 'class_weight': 'balanced_subsample', 'ccp_alpha': 0.0001}
+  4          0.7560    0.0371  {'n_estimators': 500, 'min_samples_split': 10, 'min_samples_leaf': 8, 'max_samples': None, 'max_features': 0.2, 'max_depth': 10, 'criterion': 'entropy', 'class_weight': 'balanced_subsample', 'ccp_alpha': 0.001}
+  5          0.7560    0.0371  {'n_estimators': 500, 'min_samples_split': 10, 'min_samples_leaf': 8, 'max_samples': None, 'max_features': 0.2, 'max_depth': 10, 'criterion': 'entropy', 'class_weight': 'balanced_subsample', 'ccp_alpha': 0.0}
+
+INFO | pd_ml | 
+  Strategy : k-fold
+  Metric                     Mean       Std
+  ------------------------------------------
+  accuracy                 0.6888    0.0404
+  balanced_accuracy        0.6904    0.0418
+  mcc                      0.3806    0.0836
+  auroc                    0.7561    0.0375
+  auprc                    0.7857    0.0347
+  precision                0.7006    0.0494
+  recall                   0.6744    0.0559
+  specificity              0.7064    0.0550
+  f1                       0.6853    0.0363
+
+  Per-fold AUROC:
+    fold_1: 0.7343
+    fold_2: 0.8215
+    fold_3: 0.7118
+    fold_4: 0.7691
+    fold_5: 0.7439
+
+INFO | pd_ml |   Validation metrics written to: ./results/rf_species_kfold/validation_metrics.csv
+INFO | pd_ml |   Test metrics written to: ./results/rf_species_kfold/test_metrics.csv
+INFO | pd_assess |   Confusion matrix saved to: ./results/rf_species_kfold/confusion_matrix.png

@@ -117,11 +117,17 @@ TIER_COLOURS = {
 
 def load_data():
     """
-    Load, quality-check, filter, and split into (df_feat, df_meta) on the
-    80 % train set — identical preparation to the ML pipeline.
+    Load, quality-check, filter, and return (df_feat, df_meta) on the
+    80% train set.
+
+    Loads from X_train_full.csv (raw abundance data, all metadata included)
+    rather than X_train.csv (CLR-transformed ML data) because DA analysis
+    requires non-negative count/abundance data for renormalization and CLR.
     """
     prepared_dir = _prepared_dir()
     print("Loading prepared data...")
+
+    # ── load raw abundance data (not CLR) ────────────────────
     X_train_df     = pd.read_csv(os.path.join(prepared_dir, "X_train_full.csv"))
     y_train        = pd.read_csv(os.path.join(prepared_dir, "y_train_full.csv")).squeeze()
     surviving_taxa = (
@@ -135,25 +141,21 @@ def load_data():
           f"(CRC: {int(y_train.sum())}, Control: {int((y_train == 0).sum())})")
     print(f"  Taxa    : {len(surviving_taxa)} {TAXON_LEVEL}s")
 
-    # Reconstruct metadata from prepared file
+    # ── build metadata ────────────────────────────────────────
+    # X_train_full.csv includes all metadata columns alongside taxa features.
     meta_cols_present = [c for c in METADATA_COLS if c in X_train_df.columns]
 
-    # If the prepared file still carries metadata columns, pull them; otherwise
-    # rebuild study_condition from the binary label vector.
     if "study_condition" in X_train_df.columns:
         df_meta = X_train_df[meta_cols_present].copy().reset_index(drop=True)
     else:
         df_meta = pd.DataFrame(index=X_train_df.index)
         if "dataset_name" in X_train_df.columns:
             df_meta["dataset_name"] = X_train_df["dataset_name"].values
-        if "sampleID" in X_train_df.columns:
-            df_meta["sampleID"] = X_train_df["sampleID"].values
-        # Map binary label → condition string expected by downstream code
         df_meta["study_condition"] = y_train.map({1: "CRC", 0: "control"}).values
 
     df_meta = df_meta.reset_index(drop=True)
 
-    # Use only the surviving taxa so the feature set matches the ML pipeline
+    # ── build feature matrix ──────────────────────────────────
     available_taxa = [c for c in surviving_taxa if c in X_train_df.columns]
     df_feat = (
         X_train_df[available_taxa]
@@ -165,7 +167,7 @@ def load_data():
     print(f"  After condition filter: {len(df_meta)} samples")
     print(f"  CRC: {int(y_train.sum())}  Control: {int((y_train == 0).sum())}")
 
-    # Map study_condition → condition label expected by downstream code
+    # ── condition label ───────────────────────────────────────
     df_meta["condition"] = df_meta["study_condition"].map({
         "CRC": "CRC", "crc": "CRC", "Crc": "CRC",
         "control": "control", "Control": "control", "CONTROL": "control",
@@ -178,7 +180,7 @@ def load_data():
     print(f"\n  X_train: {df_feat.shape[0]} samples x {df_feat.shape[1]} features")
     print(f"  Conditions: {df_meta['condition'].value_counts().to_dict()}")
 
-    # Data quality report
+    # ── data quality report ───────────────────────────────────
     combined       = make_combined_df(df_feat, df_meta)
     quality_report = check_data_quality(combined)
     quality_report.to_csv(OUT_QUALITY, index=False)

@@ -1,0 +1,2 @@
+best_auroc,strategy,search_method,n_iter,n_combinations,search_ratio,param_n_estimators,param_min_samples_split,param_min_samples_leaf,param_max_samples,param_max_features,param_max_depth,param_criterion,param_class_weight,param_ccp_alpha
+0.7927217542020588,lodo,RandomizedSearchCV,19353,21504,0.9,500,2,2,,0.2,10,gini,balanced,0.0001
