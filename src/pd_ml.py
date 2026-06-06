@@ -1,8 +1,6 @@
 """
 Machine learning utilities for gut microbiome classification.
 
-Helper Functions:
-
 Main Functions:
   train_model(X, y, model, strategy, params)
       Train an estimator with a chosen validation strategy and return a
