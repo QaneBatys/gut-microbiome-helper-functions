@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Alpha Diversity Analysis — Shannon Index at SPECIES Level (TSS-Normalized)
+Alpha Diversity Analysis — Shannon Index at SPECIES Level 
 PER DATASET  |  Control vs CRC only  |  SEEN DATASET
 -------------------------------------------------------------------------
 Shannon H' computed directly on species-level
@@ -30,9 +30,7 @@ from pd_utils import relative_abundance
 
 warnings.filterwarnings("ignore")
 
-# ============================================================
 # CONFIGURATION
-# ============================================================
 PREPARED_DIR    = "./data/prepared/species/"
 MIN_SAMPLES     = 10
 BOOTSTRAP_ITERS = 5000
@@ -62,9 +60,7 @@ METADATA_COLS = [
 ]
 
 
-# ============================================================
 # HELPER FUNCTIONS
-# ============================================================
 def sig_stars(p):
     if pd.isna(p):   return "n/a"
     if p < 0.001:    return "***"
@@ -166,9 +162,7 @@ def fmt_p(p):
     return f"{p:.4f}"
 
 
-# ============================================================
 # 1. LOAD PREPARED DATA
-# ============================================================
 print("Loading prepared data...")
 
 X_train_df     = pd.read_csv(os.path.join(PREPARED_DIR, "X_train_full.csv"))
@@ -209,15 +203,13 @@ species_df = (
 species_cols = available_taxa
 
 print(
-    f"\n  Pooled train: {len(metadata)} samples  "
+    f"Pooled train: {len(metadata)} samples  "
     f"(control={(metadata['study_condition'] == 'control').sum()}, "
     f"CRC={(metadata['study_condition'] == 'CRC').sum()})"
 )
 
 
-# ============================================================
 # 2. ZERO-SUM GUARD
-# ============================================================
 row_sums      = species_df.sum(axis=1)
 zero_sum_mask = row_sums == 0
 if zero_sum_mask.sum() > 0:
@@ -227,9 +219,7 @@ if zero_sum_mask.sum() > 0:
     species_df = species_df[keep].reset_index(drop=True)
     row_sums   = row_sums[keep].reset_index(drop=True)
 
-# ============================================================
 # 3. ROW SUM INFO — no exclusion, data is verified correct
-# ============================================================
 print(
     f"  Row sum range: {row_sums.min():.4f} – {row_sums.max():.4f}  "
     f"({len(row_sums)} samples retained)"
@@ -239,9 +229,7 @@ species_norm        = relative_abundance(species_df)
 species_proportions = species_norm[species_cols]
 
 
-# ============================================================
 # 4. SHANNON INDEX
-# ============================================================
 print("Calculating Shannon H' at species level (bits, log2)...")
 metadata = metadata.copy()
 metadata["shannon"] = species_proportions.apply(
@@ -258,10 +246,8 @@ for cond in ["control", "CRC"]:
     print(f"    {cond:<10}: {(metadata['study_condition'] == cond).sum()} samples")
 
 
-# ============================================================
 # 5. DESCRIPTIVE STATISTICS
-# ============================================================
-print("\n" + "=" * 75)
+print("" + "=" * 75)
 print("  DESCRIPTIVE STATISTICS — SPECIES LEVEL  |  Train set (80% per dataset)")
 print("=" * 75)
 
@@ -276,7 +262,7 @@ for ds in sorted(metadata["dataset_name"].unique()):
         desc_rows.append({"level": "per_dataset", "dataset": ds, "condition": cond, **s})
 
 print(
-    f"\n  {'Condition':<12} {'n':>5} {'Median':>8} {'Q1':>8} {'Q3':>8} "
+    f"{'Condition':<12} {'n':>5} {'Median':>8} {'Q1':>8} {'Q3':>8} "
     f"{'IQR':>8} {'Wsk_min':>8} {'Wsk_max':>8}"
 )
 print(f"  {'-'*67}")
@@ -300,11 +286,9 @@ pd.DataFrame(desc_rows).to_csv(OUTPUT_DESC, index=False)
 print(f"\n  Descriptive stats saved -> {OUTPUT_DESC}")
 
 
-# ============================================================
 # 6. STATISTICAL TESTING
-# ============================================================
 print(
-    f"\nRunning Mann-Whitney U + Cliff's delta "
+    f"Running Mann-Whitney U + Cliff's delta "
     f"(bootstrap n={BOOTSTRAP_ITERS}, seed={RANDOM_SEED})..."
 )
 
@@ -345,10 +329,8 @@ stats_df = pd.DataFrame(all_results)
 bh_correct(stats_df, "p_ctrl_vs_crc")
 
 
-# ============================================================
 # 7. PRINT STATISTICAL RESULTS
-# ============================================================
-print("\n" + "=" * 100)
+print("" + "=" * 100)
 print(
     "  MANN-WHITNEY U  |  BH-corrected FDR  |  CLIFF'S DELTA (95% Bootstrap CI) — SPECIES LEVEL"
 )
@@ -357,7 +339,7 @@ print(
 )
 print("=" * 100)
 print(
-    f"\n  {'Dataset':<25} {'p_raw':>8} {'p_adj':>8} {'sig':>4} "
+    f"{'Dataset':<25} {'p_raw':>8} {'p_adj':>8} {'sig':>4} "
     f"{'delta':>7} {'95% CI':>18} {'effect':>10}"
 )
 print(f"  {'-'*90}")
@@ -383,9 +365,7 @@ stats_df.to_csv(OUTPUT_STATS, index=False)
 print(f"\n  Stats saved -> {OUTPUT_STATS}")
 
 
-# ============================================================
 # 8. PLOT — publication quality
-# ============================================================
 plt.rcParams.update({
     "font.family":        "sans-serif",
     "font.size":          10,
@@ -483,7 +463,7 @@ for i, ds in enumerate(datasets):
         n = (sub["study_condition"] == cond).sum()
         ax.text(
             j, -0.06,
-            f"{condition_labels[cond]}\nn = {n:,}",
+            f"{condition_labels[cond]} n = {n:,}",
             transform=ax.get_xaxis_transform(),
             ha="center", va="top",
             fontsize=9, color="#1A1A1A", linespacing=1.45,
@@ -504,7 +484,7 @@ for i, ds in enumerate(datasets):
         )
         ax.text(
             0.03, 0.03,
-            f"Ctrl vs CRC:\n{cc_str}",
+            f"Ctrl vs CRC:{cc_str}",
             transform=ax.transAxes,
             va="bottom", ha="left",
             fontsize=7, family="monospace",
@@ -542,7 +522,7 @@ fig.legend(
 )
 
 fig.suptitle(
-    "Alpha Diversity \u2014 Species Level (Shannon H\u2019) Per Dataset",
+    "Alpha Diversity — Species Level (Shannon H’) Per Dataset",
     fontsize=14, fontweight="bold", y=0.97,
 )
 
@@ -551,4 +531,5 @@ plt.savefig(
     facecolor="white", edgecolor="none",
 )
 plt.show()
-print(f"\nFigure saved -> {OUTPUT_FIG}")
+
+print(f"\nFigure saved -> {OUTPUT_FIG}") 

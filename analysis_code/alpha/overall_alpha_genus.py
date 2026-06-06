@@ -6,6 +6,9 @@ ALL DATASETS COMBINED  |  GENUS LEVEL  |  Control vs CRC only
 Loads pre-split genus-level data from ./data/prepared/genus/.
 No aggregation, no splitting — all preprocessing already done.
 
+Data is split per-dataset (stratified 80/20) via split_dataset() before
+any QC or normalisation, so the analysis runs strictly on the train set.
+
 One statistical comparison across the pooled cohort:
   control vs CRC  → Mann-Whitney U + Cliff's delta
 
@@ -32,9 +35,7 @@ from pd_utils import relative_abundance
 
 warnings.filterwarnings("ignore")
 
-# ============================================================
 # CONFIGURATION
-# ============================================================
 PREPARED_DIR    = "./data/prepared/genus/"
 BOOTSTRAP_ITERS = 5000
 RANDOM_SEED     = 42
@@ -51,9 +52,7 @@ METADATA_COLS = [
 ]
 
 
-# ============================================================
 # HELPER FUNCTIONS
-# ============================================================
 def sig_stars(p):
     if pd.isna(p):   return "n/a"
     if p < 0.001:    return "***"
@@ -139,9 +138,7 @@ def boxplot_stats(values):
     }
 
 
-# ============================================================
 # 1. LOAD PREPARED DATA
-# ============================================================
 print("Loading prepared data...")
 
 X_train_df     = pd.read_csv(os.path.join(PREPARED_DIR, "X_train_full.csv"))
@@ -184,9 +181,7 @@ print(
 )
 
 
-# ============================================================
 # 2. ZERO-SUM GUARD
-# ============================================================
 row_sums      = species_df.sum(axis=1)
 zero_sum_mask = row_sums == 0
 if zero_sum_mask.sum() > 0:
@@ -202,9 +197,7 @@ print(
 )
 
 
-# ============================================================
 # 3. RELATIVE ABUNDANCE + SHANNON
-# ============================================================
 genus_norm        = relative_abundance(species_df)
 genus_proportions = genus_norm[available_taxa]
 
@@ -224,9 +217,7 @@ for cond in ["control", "CRC"]:
     print(f"    {cond:<10}: {(metadata['study_condition'] == cond).sum()} samples")
 
 
-# ============================================================
 # 4. DESCRIPTIVE STATISTICS
-# ============================================================
 print("\n" + "=" * 75)
 print("  DESCRIPTIVE STATISTICS  |  Genus level  |  Train set (80% per dataset)")
 print("=" * 75)
@@ -257,9 +248,7 @@ pd.DataFrame(desc_rows).to_csv(OUTPUT_DESC, index=False)
 print(f"\n  Descriptive stats saved -> {OUTPUT_DESC}")
 
 
-# ============================================================
 # 5. STATISTICAL TESTING
-# ============================================================
 print(
     f"\nRunning Mann-Whitney U + Cliff's delta "
     f"(bootstrap n={BOOTSTRAP_ITERS}, seed={RANDOM_SEED})..."
@@ -304,9 +293,7 @@ pd.DataFrame(results).T.to_csv(OUTPUT_STATS, index=False)
 print(f"\n  Stats saved -> {OUTPUT_STATS}")
 
 
-# ============================================================
 # 6. PLOT — publication quality
-# ============================================================
 plt.rcParams.update({
     "font.family":        "sans-serif",
     "font.size":          11,

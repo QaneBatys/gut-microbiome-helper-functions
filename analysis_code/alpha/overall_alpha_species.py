@@ -1,23 +1,26 @@
 #!/usr/bin/env python3
 """
-Alpha Diversity Analysis — Shannon Index (TSS-Normalized Abundance)
-ALL DATASETS COMBINED  |  SPECIES LEVEL  |  SEEN DATA
+Alpha Diversity Analysis — Shannon Index
+ALL DATASETS COMBINED  |  SPECIES LEVEL  |  Control vs CRC only
 --------------------------------------------------------------------
+Loads pre-split genus-level data from ./data/prepared/genus/.
+No aggregation, no splitting — all preprocessing already done.
+
 Data is split per-dataset (stratified 80/20) via split_dataset() before
 any QC or normalisation, so the analysis runs strictly on the train set.
-TSS normalisation is performed via relative_abundance().
 
 One statistical comparison across the pooled cohort:
   control vs CRC  → Mann-Whitney U + Cliff's delta
 
 No BH correction needed (single test).
-Cliff's delta 95% CI computed via bootstrapping (n=5000 iterations).
+Cliff's delta 95% CI via bootstrapping (n=5000 iterations).
 
 Cliff's delta sign convention:
-  δ > 0 → control group has HIGHER Shannon diversity than comparison group
-  δ < 0 → control group has LOWER Shannon diversity than comparison group
+  δ > 0 → control HIGHER Shannon diversity than CRC
+  δ < 0 → control LOWER Shannon diversity than CRC
 
-Shannon H' is computed in BITS (log base 2) (consistent with QIIME2 and phyloseq defaults).
+Shannon H' computed in BITS (log2), consistent with QIIME2 / phyloseq.
+------------------------------------------------------------------------
 """
 
 import os

@@ -6,6 +6,9 @@ PER DATASET  |  GENUS LEVEL  |  Control vs CRC only  |  SEEN DATASET
 Loads pre-split genus-level data from ./data/prepared/genus/.
 No aggregation, no splitting — all preprocessing already done.
 
+Data is split per-dataset (stratified 80/20) via split_dataset() before
+any QC or normalisation, so the analysis runs strictly on the train set.
+
 One statistical comparison per dataset:
   control vs CRC  → Mann-Whitney U + Cliff's delta
 
@@ -27,9 +30,7 @@ from pd_utils import relative_abundance
 
 warnings.filterwarnings("ignore")
 
-# ============================================================
 # CONFIGURATION
-# ============================================================
 PREPARED_DIR    = "./data/prepared/genus/"
 MIN_SAMPLES     = 10
 BOOTSTRAP_ITERS = 5000
@@ -59,9 +60,7 @@ METADATA_COLS = [
 ]
 
 
-# ============================================================
 # HELPER FUNCTIONS
-# ============================================================
 def sig_stars(p):
     if pd.isna(p):   return "n/a"
     if p < 0.001:    return "***"
@@ -163,9 +162,7 @@ def fmt_p(p):
     return f"{p:.4f}"
 
 
-# ============================================================
 # 1. LOAD PREPARED DATA
-# ============================================================
 print("Loading prepared data...")
 
 X_train_df     = pd.read_csv(os.path.join(PREPARED_DIR, "X_train_full.csv"))
@@ -181,7 +178,7 @@ print(f"  y_train : {len(y_train)}  "
       f"(CRC: {int(y_train.sum())}, Control: {int((y_train == 0).sum())})")
 print(f"  Taxa    : {len(surviving_taxa)} genera")
 
-# ── build metadata and genus matrix ──────────────────────────
+# build metadata and genus matrix 
 meta_cols_present = [c for c in METADATA_COLS if c in X_train_df.columns]
 
 if "study_condition" in X_train_df.columns:
@@ -213,9 +210,7 @@ print(
 print(f"  Genera: {len(feature_cols)}")
 
 
-# ============================================================
 # 2. ZERO-SUM GUARD
-# ============================================================
 row_sums      = genus_df[feature_cols].sum(axis=1)
 zero_sum_mask = row_sums == 0
 if zero_sum_mask.sum() > 0:
@@ -225,9 +220,7 @@ if zero_sum_mask.sum() > 0:
     metadata  = metadata[keep].reset_index(drop=True)
     row_sums  = genus_df[feature_cols].sum(axis=1)
 
-# ============================================================
 # 3. ROW SUM INFO — no exclusion, data is verified correct
-# ============================================================
 print(
     f"  Row sum range: {row_sums.min():.4f} – {row_sums.max():.4f}  "
     f"({len(row_sums)} samples retained)"
@@ -237,9 +230,7 @@ genus_norm        = relative_abundance(genus_df, feature_cols=feature_cols)
 genus_proportions = genus_norm[feature_cols]
 
 
-# ============================================================
 # 4. SHANNON INDEX (BITS)
-# ============================================================
 print("Calculating genus-level Shannon H' (bits, log2)...")
 metadata = metadata.copy()
 metadata["shannon"] = genus_proportions.apply(
@@ -256,9 +247,7 @@ for cond in ["control", "CRC"]:
     print(f"    {cond:<10}: {(metadata['study_condition'] == cond).sum()} samples")
 
 
-# ============================================================
 # 5. DESCRIPTIVE STATISTICS
-# ============================================================
 print("\n" + "=" * 75)
 print("  DESCRIPTIVE STATISTICS — GENUS LEVEL  |  Train set (80% per dataset)")
 print("=" * 75)
@@ -298,9 +287,7 @@ pd.DataFrame(desc_rows).to_csv(OUTPUT_DESC, index=False)
 print(f"\n  Descriptive stats saved -> {OUTPUT_DESC}")
 
 
-# ============================================================
 # 6. STATISTICAL TESTING
-# ============================================================
 print(
     f"\nRunning Mann-Whitney U + Cliff's delta "
     f"(bootstrap n={BOOTSTRAP_ITERS}, seed={RANDOM_SEED})..."
@@ -343,9 +330,7 @@ stats_df = pd.DataFrame(all_results)
 bh_correct(stats_df, "p_ctrl_vs_crc")
 
 
-# ============================================================
 # 7. PRINT STATISTICAL RESULTS
-# ============================================================
 print("\n" + "=" * 100)
 print(
     "  MANN-WHITNEY U  |  BH-corrected FDR  |  CLIFF'S DELTA (95% Bootstrap CI) — GENUS LEVEL"
@@ -381,9 +366,7 @@ stats_df.to_csv(OUTPUT_STATS, index=False)
 print(f"\n  Stats saved -> {OUTPUT_STATS}")
 
 
-# ============================================================
 # 8. PLOT — publication quality
-# ============================================================
 plt.rcParams.update({
     "font.family":        "sans-serif",
     "font.size":          10,
