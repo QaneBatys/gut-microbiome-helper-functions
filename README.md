@@ -1,6 +1,6 @@
 ### EXPLORATION OF MODEL VALIDATION STRATIGIES FOR CRC DETECTION USING GUT MICROBIOME ###
 -----------------------------------------------------------------------------------------
-
+All scripts were run with Python 3.11
 During the project, several folders were created with certain purposes:
 - src: contains the helper libraries for data splitting, data preprocessing and ML pipeline;
 - analysis_code: contains alpha, beta diversity scripts and differential abundance taxa anaylsis code;
